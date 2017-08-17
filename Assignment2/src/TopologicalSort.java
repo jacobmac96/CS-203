@@ -19,7 +19,6 @@ public class TopologicalSort {
     
 	public static void main(String[] args)
 	{
-		int inputLine = -1;//value user inputs for a command
 		String inputFile = null; //stores file name
 		try{
 			inputFile = args[0];//text file name for matrix information

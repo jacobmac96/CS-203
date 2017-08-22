@@ -10,6 +10,7 @@ public class SourceRemoval {
     static int[] sorted = null;
     static Graph graph = null;
     static int[] order = null;
+    static int[] remaining = null;
     static int counter = 0;
     /****************************************************************/
     /*Method: main                                                  */
@@ -33,6 +34,7 @@ public class SourceRemoval {
 			graph = new Graph(AdjacMatrix);
 			sorted = new int[numOfNodes];
 			order = new int[numOfNodes];
+			remaining = new int[numOfNodes];
 			if(sourceRemove())
 			{
 				printMatrix();
@@ -46,28 +48,39 @@ public class SourceRemoval {
 	
 	
 	private static boolean sourceRemove() {
-		while(counter < numOfNodes)
+		boolean updated = true;
+		while(counter < numOfNodes && updated)
 		{
+			updated = false;
 			for(int vertex = 0; vertex < graph.getVNum(); vertex++)
 			{
-				int edge = 0;
-				while(edge < graph.getVNum() && !(graph.isAdjacent(edge, vertex)))
-					edge++;
-				if(edge == graph.getVNum())
+				if(remaining[vertex] != -1)
 				{
-					order[counter] = vertex;
-					counter++;
-					graph.removeVertex(vertex);
-				}
-				else
-				{
-					//vertex had incoming edges	
+					int edge = 0;
+					while(edge < graph.getVNum() && !(graph.isAdjacent(edge, vertex)))
+						edge++;
+					if(edge == graph.getVNum())
+					{
+						order[counter] = vertex;
+						counter++;
+						graph.removeVertex(vertex);
+						remaining[vertex] = -1;
+						updated = true;
+					}
+					else
+					{
+						//vertex had incoming edges	
 
+					}
 				}
 			}
 		}
-		return true;
+		if(counter == numOfNodes)
+			return true;
+		else
+			return false;
 	}
+
 
 
 	private static void printMatrix() {

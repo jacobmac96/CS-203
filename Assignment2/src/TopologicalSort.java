@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
 /*
  * Author Jacob MacDermaid
  */
@@ -9,6 +8,10 @@ public class TopologicalSort {
     static int numOfNodes = 0;
     static int AdjacMatrix[][] = null;
     static Scanner matrixDataScanner = null;//create a scanner to scan through file
+    static Stack stack = null;
+    static Graph graph = null;
+    static int[] order = null;
+    static int counter = 0;
     /****************************************************************/
     /*Method: main                                                  */
     /*Purpose: gets file name and ask user for a command to complete*/   
@@ -22,17 +25,60 @@ public class TopologicalSort {
 		String inputFile = null; //stores file name
 		try{
 			inputFile = args[0];//text file name for matrix information
-		}catch(ArrayIndexOutOfBoundsException a){
+		}catch(ArrayIndexOutOfBoundsException noFile){
 			System.out.println("Please enter a file name.");
 			System.exit(1);
 		}
 		if(checkFile(inputFile))
 		{
-			printMatrix();
+			graph = new Graph(AdjacMatrix);
+			stack = new Stack(numOfNodes);//create a stack
+			order = new int[numOfNodes];
+			if(topoSort())
+			{
+				printMatrix();
+			}
+			else
+				System.out.println("Failed");
+				
 		}
 			
 	}
 	
+	public static boolean topoSort() {
+		int stackCount = 0;
+		for(int vertex = 0; vertex < graph.getVNum(); vertex++)
+		{
+			if(graph.getVisited(vertex) == 0)
+			{
+				stackCount++;
+				graph.setVisited(vertex, stackCount);
+				stack.push(vertex);
+				while(!stack.isEmpty())
+				{
+					int top = stack.peak();
+					int w = 0;
+				   while((w < graph.getVNum()) && (!(graph.isAdjacent(top, w)) || !(graph.getVisited(w) == 0)))
+					   w++;
+					if(w == graph.getVNum())
+					{
+						order[counter] = stack.pop();
+						counter++;
+					}
+					else
+					{
+						if(graph.isAdjacent(top, w) && graph.isAdjacent(w, top))
+							return false;
+						stackCount++;
+						graph.setVisited(w, stackCount);
+						stack.push(w);
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	private static void printMatrix() {
 		for(int i = 0; i< AdjacMatrix.length; i++)
 		{
@@ -41,6 +87,12 @@ public class TopologicalSort {
 			{
 				System.out.print(AdjacMatrix[i][j] + " ");
 			}
+			
+		}
+		System.out.println();
+		for(int i = order.length - 1; i >= 0;i--)
+		{
+			System.out.print(order[i]);
 		}
 		
 	}

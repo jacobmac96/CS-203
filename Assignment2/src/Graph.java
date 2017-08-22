@@ -47,4 +47,11 @@ public class Graph {
 		return true;
 	}
 	
+	public void removeVertex(int vertex)
+	{
+		for(int edge = 0; edge <vertices; edge++)
+		{
+			adjacencyMatrix[vertex][edge] = 0;
+		}
+	}
 }

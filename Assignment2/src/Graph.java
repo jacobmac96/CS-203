@@ -1,11 +1,24 @@
-
+/*********************************************************************/
+/*Jacob MacDermaid                                                   */
+/*Login ID: macd0919                                                 */
+/*CS-203, Summer 2017                                                */
+/*Programming Assignment 2                                           */
+/*Graph Class: This class stores the graph to performs actions       */
+/*********************************************************************/
 public class Graph {
 	
-	int vertices;
-	int edge;
-	int visited;
+	int vertices;//number of vertex 
 	int adjacencyMatrix[][] = null;
 	int visitedArray[] = null;
+	
+    /*****************************************************************/
+    /*Method: Graph                                                  */
+    /*Purpose:  constructor for graph                                */
+    /*Parameters:                                                    */
+    /*  String int[][] adjacMatrix: adjacency matrix                 */
+    /*  Returns: void                                                */
+    /*****************************************************************/
+	
 	Graph(int[][] adjacMatrix)
 	{
 		vertices = adjacMatrix.length;
@@ -13,7 +26,16 @@ public class Graph {
 		visitedArray = new int[vertices];
 	}
 	
-	void setVisited(int vertex, int count)
+    /*****************************************************************/
+    /*Method: setVisited /getVisited                                 */
+    /*Purpose:  Accessor and mutator for visited                     */
+    /*Parameters:                                                    */
+    /*  int vertex: the vertex that was visited                      */
+	/*  int count: what number it was visited                        */
+    /*  Returns: visited number                                      */
+    /*****************************************************************/
+	
+	public void setVisited(int vertex, int count)
 	{
 		if(vertex < vertices)
 		{
@@ -21,7 +43,7 @@ public class Graph {
 		}
 	}
 	
-	int getVisited(int vertex)
+	public int getVisited(int vertex)
 	{
 		if(vertex < vertices)
 		{
@@ -29,12 +51,30 @@ public class Graph {
 		}
 		return 0;
 	}
-	int getVNum()
+	
+    /*****************************************************************/
+    /*Method: getVNum                                                */
+    /*Purpose:  returns the number of vertices there are             */
+    /*Parameters:                                                    */
+    /*  void                                                         */
+    /*  Returns: number of vertices                                  */
+    /*****************************************************************/
+	
+	public int getVNum()
 	{
 		return vertices;
 	}
 	
-	boolean isAdjacent(int vertexOne, int vertexTwo)
+    /*****************************************************************/
+    /*Method: isAdjacent                                             */
+    /*Purpose: checks if two vertex are adjacent                     */
+    /*Parameters:                                                    */
+    /*  int vertexOne: start vertex                                  */
+	/*  int vertexTwo: edge vertex                                   */
+    /*  Returns: boolean: if they are adjacent                       */
+    /*****************************************************************/
+	
+	public boolean isAdjacent(int vertexOne, int vertexTwo)
 	{
 		if(vertexOne < vertices && vertexTwo < vertices)
 		{
@@ -46,6 +86,14 @@ public class Graph {
 		}
 		return true;
 	}
+	
+    /*****************************************************************/
+    /*Method: removeVertex                                           */
+    /*Purpose: removes a vertex once it has been added to sort       */
+    /*Parameters:                                                    */
+    /*  int vertex: vertex to remove                                 */
+    /*  Returns: void                                                */
+    /*****************************************************************/
 	
 	public void removeVertex(int vertex)
 	{

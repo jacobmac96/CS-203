@@ -120,7 +120,7 @@ public class SourceRemoval {
 		System.out.println();
 		for(int vertex = 0; vertex < order.length;vertex++)
 		{
-			System.out.print(order[vertex]);
+			System.out.print((order[vertex]+1) + " ");
 		}
 		
 	}

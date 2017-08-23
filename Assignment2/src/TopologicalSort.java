@@ -44,13 +44,22 @@ public class TopologicalSort {
 			stack = new Stack(numOfNodes);
 			sort = new int[numOfNodes];
 			//perform the sort
+		     long startTime = System.nanoTime();
 			if(topoSort())
 			{
+			    long endTime = System.nanoTime();
+		        long totalTime = (endTime - startTime);
 			    //print the matrix and the sort
 				printMatrix();
+				System.out.println("Time taken to complete " +totalTime + "ns");
 			}
 			else
-				System.out.println("Adjacency matrix cannot be sorted.");				
+			{
+			    long endTime = System.nanoTime();
+		        long totalTime = (endTime - startTime);
+				System.out.println("Adjacency matrix cannot be sorted.");			
+				System.out.println("Time taken to complete " +totalTime + "ns");
+			}
 		}
 			
 	}
@@ -136,7 +145,8 @@ public class TopologicalSort {
 		//print in reverse order than popped off stack
 		for(int vertex = sort.length - 1; vertex >= 0;vertex--)
 		{
-			System.out.print(sort[vertex]);
+			System.out.print((sort[vertex] + 1)  + " ");
+			
 		}
 		
 	}

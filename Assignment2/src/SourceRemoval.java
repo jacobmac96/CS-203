@@ -40,15 +40,20 @@ public class SourceRemoval {
 			graph = new Graph(AdjacMatrix);
 			order = new int[numOfNodes];
 			remaining = new int[numOfNodes];
-			printMatrix();
+			printInitMatrix();
+			long startTime = System.nanoTime();
 			if(sourceRemove())
 			{
+			    long endTime = System.nanoTime();
+                long totalTime = (endTime - startTime);
 				printMatrix();
+				System.out.println("Time taken to complete " +totalTime + " ns");
 			}
 			else
 			    System.out.println("Adjacency matrix cannot be sorted."); 
 				
 		}
+		
 			
 	}
 	
@@ -98,26 +103,40 @@ public class SourceRemoval {
 			return false;
 	}
 
+    /****************************************************************/
+    /*Method: printInit                                             */
+    /*Purpose: prints the initial matrix                            */   
+    /*Parameters:                                                   */
+    /*          void                                                */
+    /*  Returns: void                                               */
+    /****************************************************************/
+
+    private static void printInitMatrix() {
+        System.out.print("The adjacency Matrix:");
+        for(int vertex = 0; vertex< AdjacMatrix.length; vertex++)
+        {
+            System.out.println();
+            for(int edge = 0; edge < AdjacMatrix.length; edge++)
+            {
+                System.out.print(AdjacMatrix[vertex][edge] + " ");
+            }
+            
+        }
+
+        
+    }
 
     /****************************************************************/
     /*Method: printMatrix                                           */
-    /*Purpose: prints the matrix and sort                           */   
+    /*Purpose: prints the sort                                      */   
     /*Parameters:                                                   */
     /*          void                                                */
     /*  Returns: void                                               */
     /****************************************************************/
 
 	private static void printMatrix() {
-		for(int i = 0; i< AdjacMatrix.length; i++)
-		{
-			System.out.println();
-			for(int j = 0; j < AdjacMatrix.length; j++)
-			{
-				System.out.print(AdjacMatrix[i][j] + " ");
-			}
-			
-		}
-		System.out.println();
+	    System.out.println();
+		System.out.print("The sort is: ");
 		for(int vertex = 0; vertex < order.length;vertex++)
 		{
 			System.out.print((order[vertex]+1) + " ");

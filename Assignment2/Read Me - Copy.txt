@@ -1,6 +1,6 @@
 Welcome to topological sort.
 
-	This program will use a DFS-based algorithm to solve an adjacency matrix. 
+	This program will use a source-removal algorithm to solve an adjacency matrix. 
 	The format of the input file should be as followed:
 	The first line contains the number of nodes in the matrix.
 	The matrix should have spaces in between each spot if the matrix.
@@ -21,14 +21,13 @@ Welcome to topological sort.
 	"Adjacency matrix cannot be sorted."
 	
 File Included:
-	TopologicalSort.java
+	SourceRemoval.java
 	Graph.java
-	Stack.java
 
 How to Run:
-	Open topologicalSort folder in jgrasp.
+	Open SourceRemoval folder in jgrasp.
 	Enter the file name in arguments. Example: Matrix.txt
-	Run TopologicalSort.java
+	Run SourceRemoval.java
 	Wait for results to print
 
 

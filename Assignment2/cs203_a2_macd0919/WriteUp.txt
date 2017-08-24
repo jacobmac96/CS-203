@@ -1,0 +1,42 @@
+Author: Jacob MacDermaid
+Date:8/24/2017
+
+Program: DfsSort.java
+
+Theoretical worst-case running time is theta(n^2). The reason for this is the algorithm would need
+to scan each edge for every vertex in the worst case, so it would perform n^2 checks.
+
+
+The following are average run times and count for 5,6,7, and 10 nodes.
+5 - 24632.6ns - 35
+6 - 30106.6ns - 47
+7 - 32758.2ns - 70
+10 - 45100.8ns - 130
+
+Look at the graph of the count results it proves that the class of efficiency is theta(n^2). 
+
+--------------------------------------------------------------------------------------------
+
+Program: SourceRemoval.java
+
+Theoretical worst-case running time is theta(n^3). The reason for this is in the worst case 
+the algorithm finds the source at the end of the matrix. This requires n^2 checks. Once this 
+row and column are removed you are left with (n-1)^2 and then (n-2)^2 checks and so on.
+This leads to 1^2+2^2+3^2+...+n^2 = n(n+1)(2n+1)/6. From that it is found this algorithm runs in theta(n^3).
+
+
+The following are average run times and count for 5,6,7, and 10 nodes.
+5 - 15823.4ns - 25
+6 - 16.250.6ns - 36
+7 - 17961.2ns - 55
+10 - 34982.2ns - 132
+
+Look at the graph of the count results it proves that the class of efficiency is theta(n^3). 
+
+
+The faster algorithm is source removal when number of nodes is less than 10. If you look at the graph 
+of the counts for these two algorithms you can see that source removal starts off with a smaller count 
+and takes less time, but as number of nodes increases the difference becomes less and less until 
+number of nodes hits 10. Then the count becomes greater for source removal. So, dfs sort becomes the 
+faster algorithm. This is backed up by the theoretical worst-case because dfs has a better class 
+of efficiency than source removal. 

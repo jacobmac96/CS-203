@@ -1,6 +1,0 @@
-BruteForce.java
-
-Theoretical worst-case running time 
-
-
-Average run time for orginal eight-queens problem is 106.7378 seconds. This average is based on 10 trails. 

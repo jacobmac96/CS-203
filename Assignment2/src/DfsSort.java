@@ -6,10 +6,10 @@ import java.util.Scanner;
 /*Login ID: macd0919                                                 */
 /*CS-203, Summer 2017                                                */
 /*Programming Assignment 2                                           */
-/*TopologicalSort Class: This class sorts an adjacency matrix using  */
+/*DfsSort Class: This class sorts an adjacency matrix using          */
 /*  										  a DFS-based algorithm  */
 /*********************************************************************/
-public class TopologicalSort {
+public class DfsSort {
     static int numOfNodes = 0; //number of nodes in the file
     static int AdjacMatrix[][] = null;//2D array to store matrix
     static Scanner matrixDataScanner = null;//create a scanner to scan through file
@@ -44,35 +44,30 @@ public class TopologicalSort {
 			stack = new Stack(numOfNodes);
 			sort = new int[numOfNodes];
 			//perform the sort
-		     long startTime = System.nanoTime();
-			if(topoSort())
+			if(dfsSort())
 			{
-			    long endTime = System.nanoTime();
-		        long totalTime = (endTime - startTime);
 			    //print the matrix and the sort
 				printMatrix();
-				System.out.println("Time taken to complete " +totalTime + "ns");
 			}
 			else
 			{
-			    long endTime = System.nanoTime();
-		        long totalTime = (endTime - startTime);
+			    //back edge was found
 				System.out.println("Adjacency matrix cannot be sorted.");			
-				System.out.println("Time taken to complete " +totalTime + "ns");
 			}
 		}
 			
 	}
 	
     /****************************************************************/
-    /*Method: topoSort                                              */
-    /*Purpose: performs the topological sort on the matrix          */   
+    /*Method: dfsSort                                               */
+    /*Purpose: performs the dfs sort on the matrix                  */   
     /*Parameters:                                                   */
     /*          void                                                */
     /*  Returns: boolean: if the sort was successful                */
     /****************************************************************/
 	
-	public static boolean topoSort() {
+	public static boolean dfsSort() 
+	{
 	    //keep track of when vertex was pushed to stack
 		int stackCount = 0;
 		for(int vertex = 0; vertex < graph.getVNum(); vertex++)
@@ -130,9 +125,10 @@ public class TopologicalSort {
     /*  Returns: void                                               */
     /****************************************************************/
 	
-	public static void printMatrix() {
+	public static void printMatrix() 
+	{
 	    //print the adjacency matrix
-	    System.out.print("The adjacency Matrix:");
+	    System.out.print("The Adjacency Matrix:");
 		for(int vertex = 0; vertex< AdjacMatrix.length; vertex++)
 		{
 			System.out.println();

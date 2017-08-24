@@ -90,9 +90,11 @@ public class TopologicalSort {
 				    //get the vertex at top of stack
 					int topVertex = stack.peak();
 					int  edge= 0;//variable for keeping track of edge being checked
-					//go through all edges until an adjacent non visited edge is found
-					while((edge < graph.getVNum()) && (!(graph.isAdjacent(topVertex, edge)) 
-				                               || !(graph.getVisited(edge) == 0)))
+					/*go through all edges until an adjacent non visited edge is found 
+					                                                or adjacent edge in stack*/
+					while(  edge < graph.getVNum() && 
+					        !graph.isAdjacent(topVertex, edge) ||
+					        ( !stack.contains(edge) && !(graph.getVisited(edge) == 0) ) )  
 					{
 				       edge++;
 					}
@@ -106,7 +108,7 @@ public class TopologicalSort {
 					else
 					{
 					    //check if there is a back edge.
-						if(graph.isAdjacent(topVertex, edge) && graph.isAdjacent(edge, topVertex))
+						if(stack.contains(edge))
 							return false;
 						//if no back edge then push current vertex to stack
 						stackCount++;

@@ -87,4 +87,14 @@ public class Stack {
 		else
 			return false;
 	}
+	
+	public boolean contains(int vertex)
+	{
+	    for(int i = 0; i < count; i++)
+	    {
+	        if(stack[i] == vertex)
+	            return true;	        
+	    }
+	    return false;
+	}
 }

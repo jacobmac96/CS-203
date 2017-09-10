@@ -7,6 +7,7 @@ public class ClosetPair {
     static Scanner pointsScanner = null;
     static int numOfPoints = 0;
     static TwoDPoints setOfPoints[] = null;
+    static ClosestPoints minPoints = new ClosestPoints();
     /****************************************************************/
     /*Method: main                                                  */
     /*Purpose: gets file name from arg and starts the sort          */   
@@ -33,6 +34,8 @@ public class ClosetPair {
             System.arraycopy(setOfPoints, 0, xSetOfPoints, 0, numOfPoints);
             mergeSort(setOfPoints);
             TwoDPoints ySetOfPoints[] = setOfPoints;
+            efficientClosestPair(xSetOfPoints, ySetOfPoints);
+            printPoints();
         }
             
     }
@@ -85,7 +88,8 @@ public class ClosetPair {
             int newX = pointsScanner.nextInt();
             int newY = pointsScanner.nextInt();                    
             setOfPoints[currPoint++] = new TwoDPoints(newX, newY);
-            pointsScanner.nextLine();
+            if(pointsScanner.hasNextLine())
+                pointsScanner.nextLine();
                         
         }
         return true;    
@@ -108,13 +112,12 @@ public class ClosetPair {
         int i = left;
         int j = right + 1;
         do{
-            do{ i++; } while( (i < numOfPoints) && (setOfPoints[i].getXPoint() < p) );
-            do{ j--; } while( (j > 0) && (setOfPoints[j].getXPoint() > p) );
+            do{ i++; } while( (i < numOfPoints) && (setOfPoints[i].getXPoint() <= p) );
+            do{ j--; } while( (j > 0) && (setOfPoints[j].getXPoint() >= p) );
             TwoDPoints temp = setOfPoints[i];
             setOfPoints[i] = setOfPoints[j];
             setOfPoints[j] = temp;
-        }
-        while( i < j);
+        }while( i < j);
        
         TwoDPoints temp = setOfPoints[i];
         setOfPoints[i] = setOfPoints[j];
@@ -166,5 +169,39 @@ public class ClosetPair {
         }
         else
             System.arraycopy(B, i, A, k, B.length -i);
+    }
+    
+    public static void efficientClosestPair(TwoDPoints[] P, TwoDPoints[] Q)
+    {
+        //if(P.length <= 3)
+        //{
+            bruteClosestPair(P);
+       // }
+    }
+    
+    public static void bruteClosestPair(TwoDPoints[] P)
+    {
+            float min = 0;
+            for(int i = 0; i <P.length - 1; i++)
+            {
+                for(int j = 0; j < P.length; j++)
+                {
+                    if (dist(P[i], P[j]) < min || minPoints.getDistance() == 0)
+                    {
+                        min = dist(P[i], P[j]);
+                        minPoints.setPoints(P[i].getXPoint(), P[i].getYPoint(), P[j].getXPoint(), P[j].getYPoint());
+                        minPoints.setDistance(min);
+                    }
+                    
+                }
+            }
+            
+    }
+    
+    public static float dist(TwoDPoints p1, TwoDPoints p2)
+    {
+        return (float) Math.sqrt( (p1.getXPoint() - p2.getXPoint())*(p1.getXPoint() - p2.getXPoint()) +
+                     (p1.getYPoint() - p2.getYPoint())*(p1.getYPoint() - p2.getYPoint())
+                   );
     }
 }

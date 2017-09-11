@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class ClosetPair{
+public class FindClosestPoints{
 
     static Scanner pointsScanner = null;
     static int numOfPoints = 0;
@@ -26,23 +26,29 @@ public class ClosetPair{
             System.out.println("Please enter a file name.");
             System.exit(1);
         }
-        //creates matrix from input file
+        //creates TwoDPoints array from input file
         if(getPoints(inputFile))
         {
+            //perform quick sort on x coordinates
             quickSort(0, (numOfPoints - 1));
+            //create new array for points sorted by x
             TwoDPoints xSetOfPoints[] = new TwoDPoints[numOfPoints];
             System.arraycopy(setOfPoints, 0, xSetOfPoints, 0, numOfPoints);
-            mergeSort(setOfPoints);
-            TwoDPoints ySetOfPoints[] = setOfPoints;
-            float d = efficientClosestPair(xSetOfPoints, ySetOfPoints);
-            printPoints();
-            System.out.println("The closest points are" + minPoints.getPoints());
-            System.out.println(minPoints.distance);
+            //perform merge sort on y coordinates
+            if(mergeSort(setOfPoints))
+            {
+                //create new array for points sorted by y
+                TwoDPoints ySetOfPoints[] = setOfPoints;
+                efficientClosestPair(xSetOfPoints, ySetOfPoints);
+                printPoints();
+                System.out.println("The closest points are" + minPoints.getPoints());
+                System.out.println(minPoints.distance);
+            }
         }
             
     }
     
-    
+    //remove-for debugging
     public static void printPoints() {
         // TODO Auto-generated method stub
         for(int i = 0; i < numOfPoints; i++)
@@ -53,11 +59,11 @@ public class ClosetPair{
 
 
     /****************************************************************/
-    /*Method: createMatrix                                          */
-    /*Purpose: reads the input file and creates a adjacency matrix  */   
+    /*Method: getPoints                                             */
+    /*Purpose: reads the input file and creates a TwoDPoints array  */   
     /*Parameters:                                                   */
     /*          String: inputFile file to read from                 */
-    /*  Returns: boolean: if the matrix was created or not          */
+    /*  Returns: boolean: if the array was created or not           */
     /****************************************************************/
     
     public static boolean getPoints(String inputFile)
@@ -79,16 +85,18 @@ public class ClosetPair{
         else
         {
             //no number of points was given
-            System.out.println("Make sure number of nodes is an integer");
+            System.out.println("Make sure number of points is an integer");
             return false;
         }
-        //init the adjacMatrix with number of nodes
+        //init the points array with number of points
         setOfPoints = new TwoDPoints[numOfPoints];
         //keep scanning through line to get edges
         while(pointsScanner.hasNextInt() && currPoint < numOfPoints)//check if file has another line
         {
+            //get x and y coordinate of point
             int newX = pointsScanner.nextInt();
-            int newY = pointsScanner.nextInt();                    
+            int newY = pointsScanner.nextInt();    
+            //add point to array
             setOfPoints[currPoint++] = new TwoDPoints(newX, newY);
             if(pointsScanner.hasNextLine())
                 pointsScanner.nextLine();
@@ -97,55 +105,104 @@ public class ClosetPair{
         return true;    
     }
     
+    /****************************************************************/
+    /*Method: quickSort                                             */
+    /*Purpose: performs sort on x coordinates using a quick sort    */
+    /*                                                      method  */   
+    /*Parameters:                                                   */
+    /*          int first: first position to look in array          */
+    /*          int last: last position to look in array            */
+    /*  Returns: void                                               */
+    /****************************************************************/
     
-    public static void quickSort(int left, int right)
+    public static void quickSort(int first, int last)
     {
-        if(left < right)
+        if(first < last)
         {
-            int s = hoarePartitioning(left , right);
-            quickSort(left, s-1);
-            quickSort(s+1, right);
+            int mid = hoarePartitioning(first , last);
+            quickSort(first, mid-1);
+            quickSort(mid+1, last);
         }
     }
 
+    /****************************************************************/
+    /*Method: hoarePartitioning                                     */
+    /*Purpose: uses hoare partitioning algorithm to sort            */  
+    /*Parameters:                                                   */
+    /*          int left: left position to look in array            */
+    /*          int right: right position to look in array          */
+    /*  Returns: int: new left(pivot) point                         */
+    /****************************************************************/
 
     public static int hoarePartitioning(int left, int right) {
-        int p = setOfPoints[left].getXPoint();
-        int i = left - 1;
-        int j = right + 1;
+        int pivotX = setOfPoints[left].getXPoint();//pivot is first element
+        int leftToRight = left;//variable that scans from left to right
+        int rightToLeft = right + 1;//variable that scans from right to left
         do{
-            do{ i++; } while( (i < (numOfPoints -1)) && (setOfPoints[i].getXPoint() <= p) );
-            do{ j--; } while( (j > 0) && (setOfPoints[j].getXPoint() >= p) );
-            TwoDPoints temp = setOfPoints[i];
-            setOfPoints[i] = setOfPoints[j];
-            setOfPoints[j] = temp;
-        }while( i < j);
-       
-        TwoDPoints temp = setOfPoints[i];
-        setOfPoints[i] = setOfPoints[j];
-        setOfPoints[j] = temp;
+            //increase left point until bigger x is found than pivot
+            do
+            { 
+                leftToRight++; 
+            }while( (leftToRight < (numOfPoints -1)) && 
+                        (setOfPoints[leftToRight].getXPoint() <= pivotX) );
+            //decrease right point until smaller x is found than pivot
+            do
+            { 
+                rightToLeft--;
+            }while( (rightToLeft > 0) && 
+                        (setOfPoints[rightToLeft].getXPoint() >= pivotX) );
+            //perform swap leftToRight with RighttoLeft
+            TwoDPoints temp = setOfPoints[leftToRight];
+            setOfPoints[leftToRight] = setOfPoints[rightToLeft];
+            setOfPoints[rightToLeft] = temp;
+        }while( leftToRight < rightToLeft);
+        //undo last swap when leftToRight < rightToLeft
+        TwoDPoints temp = setOfPoints[leftToRight];
+        setOfPoints[leftToRight] = setOfPoints[rightToLeft];
+        setOfPoints[rightToLeft] = temp;
+        //swap left with rightToLeft
         temp = setOfPoints[left];
-        setOfPoints[left] = setOfPoints[j];
-        setOfPoints[j] = temp;
-        
-        return j;
+        setOfPoints[left] = setOfPoints[rightToLeft];
+        setOfPoints[rightToLeft] = temp;
+        //return new left point
+        return rightToLeft;
     }
     
-    public static void mergeSort(TwoDPoints[] A)
+    /****************************************************************/
+    /*Method: mergeSort                                             */
+    /*Purpose: uses merge sort method to sort y coordinates         */  
+    /*Parameters:                                                   */
+    /*          TwoDPoints[] fullArray: current full array          */
+    /*  Returns: boolean: if points were sorted                     */
+    /****************************************************************/
+    
+    public static boolean mergeSort(TwoDPoints[] fullArray)
     {
-        if(A.length > 1)
+        if(fullArray.length > 1)
         {
-            int N1 = (int) Math.floor(A.length / 2);
-            int N2 = A.length - N1;
-            TwoDPoints B[] = new TwoDPoints[N1];
-            TwoDPoints C[] = new TwoDPoints[N2];
-            System.arraycopy(A, 0, B, 0, N1);
-            System.arraycopy(A, N1, C, 0, N2);
-            mergeSort(B);
-            mergeSort(C);
-            merge(B, C, A);
+            int splitOne = (int) Math.floor(fullArray.length / 2);
+            int SplitTwo = fullArray.length - splitOne;
+            TwoDPoints halfOne[] = new TwoDPoints[splitOne];
+            TwoDPoints halfTwo[] = new TwoDPoints[SplitTwo];
+            System.arraycopy(fullArray, 0, halfOne, 0, splitOne);
+            System.arraycopy(fullArray, splitOne, halfTwo, 0, SplitTwo);
+            mergeSort(halfOne);
+            mergeSort(halfTwo);
+            merge(halfOne, halfTwo, fullArray);
+            return true;
         }
+        else
+            return false;
     }
+    
+    /****************************************************************/
+    /*Method: merge                                                 */
+    /*Purpose: uses the smaller arrays into bigger array            */  
+    /*Parameters:                                                   */
+    /*         */
+    /*  Returns: boolean: if points were sorted                     */
+    /****************************************************************/
+    
     public static void merge(TwoDPoints[] B, TwoDPoints[] C, TwoDPoints[] A)
     {
         int i = 0;

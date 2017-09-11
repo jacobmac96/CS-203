@@ -1,10 +1,19 @@
 
-public class ClosestPoints {
+public class ClosestPoints implements Comparable<ClosestPoints>{
     int pointOneX;
     int pointOneY;
     int pointTwoX;
     int pointTwoY;
     float distance;
+    
+    ClosestPoints(int oneX, int oneY, int twoX, int twoY)
+    {
+        pointOneX = oneX;
+        pointOneY = oneY;
+        pointTwoX = twoX;
+        pointTwoY = twoY;
+    }
+    
     ClosestPoints()
     {
         
@@ -32,5 +41,15 @@ public class ClosestPoints {
     {
         return distance;
     }
+
+    @Override
+    public int compareTo(ClosestPoints d2) {
+        if(this.distance < d2.distance)
+            return -1;
+        if(this.distance > d2.distance)
+            return 1;
+        return 0;
+    }
+
     
 }

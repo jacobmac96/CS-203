@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class ClosetPair {
+public class ClosetPair{
 
     static Scanner pointsScanner = null;
     static int numOfPoints = 0;
@@ -34,8 +34,10 @@ public class ClosetPair {
             System.arraycopy(setOfPoints, 0, xSetOfPoints, 0, numOfPoints);
             mergeSort(setOfPoints);
             TwoDPoints ySetOfPoints[] = setOfPoints;
-            efficientClosestPair(xSetOfPoints, ySetOfPoints);
+            float d = efficientClosestPair(xSetOfPoints, ySetOfPoints);
             printPoints();
+            System.out.println("The closest points are" + minPoints.getPoints());
+            System.out.println(minPoints.distance);
         }
             
     }
@@ -171,17 +173,69 @@ public class ClosetPair {
             System.arraycopy(B, i, A, k, B.length -i);
     }
     
-    public static void efficientClosestPair(TwoDPoints[] P, TwoDPoints[] Q)
+    public static float efficientClosestPair(TwoDPoints[] P, TwoDPoints[] Q) 
     {
-        //if(P.length <= 3)
-        //{
-            bruteClosestPair(P);
-       // }
+       float dLeft;
+       float dRight;
+       float dMinSqr = 0;
+       if(P.length == 1)
+           return 0;
+       if(P.length <= 3)
+       {
+           return bruteClosestPair(P);
+       }
+       else
+       {
+           int N1 = (int)(P.length / 2);
+           int N2 = P.length - N1;
+           TwoDPoints PLeft[] = new TwoDPoints[N1];
+           TwoDPoints PRight[] = new TwoDPoints[N2];
+           System.arraycopy(P, 0, PLeft, 0, N1);
+           System.arraycopy(P, N1, PRight, 0, N2);
+           TwoDPoints QLeft[] = new TwoDPoints[N1];
+           TwoDPoints QRight[] = new TwoDPoints[N2];
+           System.arraycopy(Q, 0, QLeft, 0, N1);
+           System.arraycopy(Q, N1, QRight, 0, N2);
+           
+           dLeft = efficientClosestPair(PLeft,QLeft);
+           dRight = efficientClosestPair(PRight,QRight);
+           
+           float d = Math.min(dLeft, dRight);
+           int m = P[N1-1].getXPoint();
+           TwoDPoints S[] = new TwoDPoints[numOfPoints];
+           int j = 0;
+           for(int i = 0; i < Q.length; i++)
+           {
+               if((Math.abs(Q[i].getXPoint() - m) < d))
+               {
+                   S[j] = Q[i];
+                   j++;
+               }
+           }
+           dMinSqr = d * d;
+           for(int i = 0; i < j - 1; i++)
+           {
+               int k = i + 1;
+               while( (k <= (j-1)) && 
+                       (((S[k].getYPoint() - S[i].getYPoint()) * (S[k].getYPoint() - S[i].getYPoint())) < dMinSqr))
+               {
+                   ClosestPoints testPoints = new ClosestPoints
+                               (S[k].getXPoint(),S[k].getYPoint(), S[i].getXPoint(),S[i].getYPoint());
+                   testPoints.setDistance(dist(S[k],S[i]));
+                   if(testPoints.compareTo(minPoints) == -1)
+                       minPoints = testPoints;       
+                   dMinSqr = minPoints.distance;
+                   k = k+1;
+               }
+           }  
+           
+       }
+       return (dMinSqr);
     }
     
-    public static void bruteClosestPair(TwoDPoints[] P)
+    public static float bruteClosestPair(TwoDPoints[] P)
     {
-            float min = 0;
+            float min = 100;
             for(int i = 0; i <P.length - 1; i++)
             {
                 for(int j = 0; j < P.length; j++)
@@ -195,7 +249,7 @@ public class ClosetPair {
                     
                 }
             }
-            
+            return min;
     }
     
     public static float dist(TwoDPoints p1, TwoDPoints p2)
@@ -204,4 +258,12 @@ public class ClosetPair {
                      (p1.getYPoint() - p2.getYPoint())*(p1.getYPoint() - p2.getYPoint())
                    );
     }
+    
+    public static float distsqrd(TwoDPoints p1, TwoDPoints p2)
+    {
+        return (float)( (p1.getXPoint() - p2.getXPoint())*(p1.getXPoint() - p2.getXPoint()) +
+                (p1.getYPoint() - p2.getYPoint())*(p1.getYPoint() - p2.getYPoint())
+              );
+    }
+
 }

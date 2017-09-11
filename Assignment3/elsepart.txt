@@ -1,0 +1,38 @@
+ int N1 = (int) Math.ceil(P.length / 2);
+           int N2 = P.length - N1;
+           TwoDPoints PLeft[] = new TwoDPoints[N1];
+           TwoDPoints PRight[] = new TwoDPoints[N2];
+           System.arraycopy(P, 0, PLeft, 0, N1);
+           System.arraycopy(P, N1, PRight, 0, N2);
+           TwoDPoints QLeft[] = new TwoDPoints[N1];
+           TwoDPoints QRight[] = new TwoDPoints[N2];
+           System.arraycopy(Q, 0, QLeft, 0, N1);
+           System.arraycopy(Q, N1, QRight, 0, N2);
+           
+           dLeft = efficientClosestPair(PLeft,QLeft);
+           dRight = efficientClosestPair(PRight,QRight);
+           float d = Math.min(dLeft, dRight);
+           int m = P[N1-1].getXPoint();
+           TwoDPoints S[] = new TwoDPoints[numOfPoints];
+           int j = 0;
+           for(int i = 0; i < Q.length; i++)
+           {
+               if((Math.abs(Q[i].getXPoint() - m) < d))
+               {
+                   S[j] = Q[i];
+                   j++;
+               }
+           }
+           dMinSqr = d * d;
+           for(int i = 0; i < j - 1; i++)
+           {
+               int k = i + 1;
+               while( (k <= (j)) && 
+                       (((S[k].getYPoint() - S[i].getYPoint()) * (S[k].getYPoint() - S[i].getYPoint())) < dMinSqr))
+               {
+                   dMinSqr = Math.min(distsqrd(S[k],S[i]),dMinSqr);
+                   k = k+1;
+               }
+           }  
+           
+       }

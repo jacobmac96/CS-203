@@ -102,7 +102,7 @@ public class ClosetPair{
     {
         if(left < right)
         {
-            int s = hoarePartitioning(left, right);
+            int s = hoarePartitioning(left , right);
             quickSort(left, s-1);
             quickSort(s+1, right);
         }
@@ -111,10 +111,10 @@ public class ClosetPair{
 
     public static int hoarePartitioning(int left, int right) {
         int p = setOfPoints[left].getXPoint();
-        int i = left;
+        int i = left - 1;
         int j = right + 1;
         do{
-            do{ i++; } while( (i < numOfPoints) && (setOfPoints[i].getXPoint() <= p) );
+            do{ i++; } while( (i < (numOfPoints -1)) && (setOfPoints[i].getXPoint() <= p) );
             do{ j--; } while( (j > 0) && (setOfPoints[j].getXPoint() >= p) );
             TwoDPoints temp = setOfPoints[i];
             setOfPoints[i] = setOfPoints[j];

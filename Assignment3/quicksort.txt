@@ -1,0 +1,52 @@
+ public static void quickSort(int first, int last)
+    {
+        if(first < last)
+        {
+            int mid = hoarePartitioning(first , last);
+            quickSort(first, mid-1);
+            quickSort(mid+1, last);
+        }
+    }
+
+    /****************************************************************/
+    /*Method: hoarePartitioning                                     */
+    /*Purpose: uses hoare partitioning algorithm to sort            */  
+    /*Parameters:                                                   */
+    /*          int left: left position to look in array            */
+    /*          int right: right position to look in array          */
+    /*  Returns: int: new left(pivot) point                         */
+    /****************************************************************/
+
+    public static int hoarePartitioning(int left, int right) {
+        int pivotX = setOfPoints[left].getXPoint();//pivot is first element
+        int leftToRight = left;//variable that scans from left to right
+        int rightToLeft = right + 1;//variable that scans from right to left
+        do{
+            //increase left point until bigger x is found than pivot
+            do
+            { 
+                leftToRight++; 
+            }while( (leftToRight < (numOfPoints -1)) && 
+                        (setOfPoints[leftToRight].getXPoint() <= pivotX) );
+            //decrease right point until smaller x is found than pivot
+            do
+            { 
+                rightToLeft--;
+            }while( (rightToLeft > 0) && 
+                        (setOfPoints[rightToLeft].getXPoint() >= pivotX) );
+            //perform swap leftToRight with RighttoLeft
+            TwoDPoints temp = setOfPoints[leftToRight];
+            setOfPoints[leftToRight] = setOfPoints[rightToLeft];
+            setOfPoints[rightToLeft] = temp;
+        }while( leftToRight < rightToLeft);
+        //undo last swap when leftToRight < rightToLeft
+        TwoDPoints temp = setOfPoints[leftToRight];
+        setOfPoints[leftToRight] = setOfPoints[rightToLeft];
+        setOfPoints[rightToLeft] = temp;
+        //swap left with rightToLeft
+        temp = setOfPoints[left];
+        setOfPoints[left] = setOfPoints[rightToLeft];
+        setOfPoints[rightToLeft] = temp;
+        //return new left point
+        return rightToLeft;
+    }

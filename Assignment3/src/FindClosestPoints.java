@@ -144,13 +144,13 @@ public class FindClosestPoints{
             { 
                 leftToRight++; 
             }while( (leftToRight < (numOfPoints -1)) && 
-                        (setOfPoints[leftToRight].getXPoint() <= pivotX) );
+                        (setOfPoints[leftToRight].getXPoint() < pivotX) );
             //decrease right point until smaller x is found than pivot
             do
             { 
                 rightToLeft--;
             }while( (rightToLeft > 0) && 
-                        (setOfPoints[rightToLeft].getXPoint() >= pivotX) );
+                        (setOfPoints[rightToLeft].getXPoint() > pivotX) );
             //perform swap leftToRight with RighttoLeft
             TwoDPoints temp = setOfPoints[leftToRight];
             setOfPoints[leftToRight] = setOfPoints[rightToLeft];
@@ -178,16 +178,22 @@ public class FindClosestPoints{
     
     public static boolean mergeSort(TwoDPoints[] fullArray)
     {
+        //make sure array has more than one point
         if(fullArray.length > 1)
         {
+            //get the index of the split
             int splitOne = (int) Math.floor(fullArray.length / 2);
             int SplitTwo = fullArray.length - splitOne;
+            //create TwoDPoint array to hold the split
             TwoDPoints halfOne[] = new TwoDPoints[splitOne];
             TwoDPoints halfTwo[] = new TwoDPoints[SplitTwo];
+            //copy the corresponding portion of array
             System.arraycopy(fullArray, 0, halfOne, 0, splitOne);
             System.arraycopy(fullArray, splitOne, halfTwo, 0, SplitTwo);
+            //call mergesort for each split
             mergeSort(halfOne);
             mergeSort(halfTwo);
+            //merge back together
             merge(halfOne, halfTwo, fullArray);
             return true;
         }
@@ -197,92 +203,108 @@ public class FindClosestPoints{
     
     /****************************************************************/
     /*Method: merge                                                 */
-    /*Purpose: uses the smaller arrays into bigger array            */  
+    /*Purpose: uses the smaller arrays to sort bigger array         */  
     /*Parameters:                                                   */
-    /*         */
-    /*  Returns: boolean: if points were sorted                     */
+    /*        TwoDPoints[] halfOne: first half sorted               */
+    /*        TwoDPoints[] halfTwo: second half sorted              */
+    /*        TwoDPoints[] fullArray full array to store halfed     */
+    /*  Returns: void                                               */
     /****************************************************************/
     
-    public static void merge(TwoDPoints[] B, TwoDPoints[] C, TwoDPoints[] A)
+    public static void merge(TwoDPoints[] halfOne, TwoDPoints[] halfTwo, TwoDPoints[] fullArray)
     {
-        int i = 0;
-        int j = 0;
-        int k = 0;
-        while( (i < B.length) && (j < C.length) )
+        int counterOne = 0;//counter for halfOne
+        int counterTwo = 0;//counter for haldTwo
+        int arrayIndex = 0;//index of fullArray
+        //add until one array is empty
+        while( (counterOne < halfOne.length) && (counterTwo < halfTwo.length) )
         {
-            if(B[i].getYPoint() <= C[j].getYPoint())
+            //check which value is smaller and add to array
+            if(halfOne[counterOne].getYPoint() <= halfTwo[counterTwo].getYPoint())
             {
-                A[k] = B[i];
-                i++;
+                fullArray[arrayIndex] = halfOne[counterOne];
+                counterOne++;
             }
             else
             {
-                A[k] = C[j];
-                j++;
+                fullArray[arrayIndex] = halfTwo[counterTwo];
+                counterTwo++;
             }
-            k++;
+            //increase index
+            arrayIndex++;
         }
-        if(i == B.length)
+        //check which array has left over elements
+        if(counterOne == halfOne.length)
         {
-            System.arraycopy(C, j, A, k, C.length -j);
+            System.arraycopy(halfTwo, counterTwo, fullArray, arrayIndex, (halfTwo.length - counterTwo));
         }
         else
-            System.arraycopy(B, i, A, k, B.length -i);
+            System.arraycopy(halfOne, counterOne, fullArray, arrayIndex, (halfOne.length - counterOne));
     }
     
-    public static float efficientClosestPair(TwoDPoints[] P, TwoDPoints[] Q) 
+    
+    /****************************************************************/
+    /*Method: efficientClosestPair                                  */
+    /*Purpose: solves the closest-pair problem using divide&conquer */  
+    /*Parameters:                                                   */
+    /*          TwoDPoints[] xSortedArray: points sorted by x       */
+    /*          TwoDPoints[] ySortedArray: points sorted by y       */
+    /*  Returns: float: closest distance                            */
+    /****************************************************************/
+    
+    public static float efficientClosestPair(TwoDPoints[] xSortedArray, TwoDPoints[] ySortedArray) 
     {
-       float dLeft;
-       float dRight;
-       float dMinSqr = 0;
-       if(P.length == 1)
-           return 0;
-       if(P.length <= 3)
+       float dLeft;//closest distance on left
+       float dRight;//closest distance on right
+       float dMinSqr = 0;//min distance squared
+       //do brute force method if 3 or less points
+       if(xSortedArray.length <= 3)
        {
-           return bruteClosestPair(P);
+           return bruteClosestPair(xSortedArray);
        }
        else
        {
-           int N1 = (int)(P.length / 2);
-           int N2 = P.length - N1;
-           TwoDPoints PLeft[] = new TwoDPoints[N1];
-           TwoDPoints PRight[] = new TwoDPoints[N2];
-           System.arraycopy(P, 0, PLeft, 0, N1);
-           System.arraycopy(P, N1, PRight, 0, N2);
-           TwoDPoints QLeft[] = new TwoDPoints[N1];
-           TwoDPoints QRight[] = new TwoDPoints[N2];
-           System.arraycopy(Q, 0, QLeft, 0, N1);
-           System.arraycopy(Q, N1, QRight, 0, N2);
            
-           dLeft = efficientClosestPair(PLeft,QLeft);
-           dRight = efficientClosestPair(PRight,QRight);
+           int halfOne = (int)(xSortedArray.length / 2);
+           int halfTwo = xSortedArray.length - halfOne;
+           TwoDPoints xSortLeft[] = new TwoDPoints[halfOne];
+           TwoDPoints xSortRight[] = new TwoDPoints[halfTwo];
+           System.arraycopy(xSortedArray, 0, xSortLeft, 0, halfOne);
+           System.arraycopy(xSortedArray, halfOne, xSortRight, 0, halfTwo);
+           TwoDPoints ySortLeft[] = new TwoDPoints[halfOne];
+           TwoDPoints ySortRight[] = new TwoDPoints[halfTwo];
+           System.arraycopy(ySortedArray, 0, ySortLeft, 0, halfOne);
+           System.arraycopy(ySortedArray, halfOne, ySortRight, 0, halfTwo);
            
-           float d = Math.min(dLeft, dRight);
-           int m = P[N1-1].getXPoint();
-           TwoDPoints S[] = new TwoDPoints[numOfPoints];
-           int j = 0;
-           for(int i = 0; i < Q.length; i++)
+           dLeft = efficientClosestPair(xSortLeft,ySortLeft);
+           dRight = efficientClosestPair(xSortRight,ySortRight);
+           
+           float minDis = Math.min(dLeft, dRight);
+           int middle = xSortedArray[halfOne-1].getXPoint();
+           TwoDPoints subArray[] = new TwoDPoints[numOfPoints];
+           int subArrayCounter = 0;
+           for(int index = 0; index < ySortedArray.length; index++)
            {
-               if((Math.abs(Q[i].getXPoint() - m) < d))
+               if((Math.abs(ySortedArray[index].getXPoint() - middle) < minDis))
                {
-                   S[j] = Q[i];
-                   j++;
+                   subArray[subArrayCounter] = ySortedArray[index];
+                   subArrayCounter++;
                }
            }
-           dMinSqr = d * d;
-           for(int i = 0; i < j - 1; i++)
+           dMinSqr = minDis * minDis;
+           for(int index = 0; index < subArrayCounter - 1; index++)
            {
-               int k = i + 1;
-               while( (k <= (j-1)) && 
-                       (((S[k].getYPoint() - S[i].getYPoint()) * (S[k].getYPoint() - S[i].getYPoint())) < dMinSqr))
+               int nextPoint = index + 1;
+               while( (nextPoint <= (subArrayCounter-1)) && 
+                       (((subArray[nextPoint].getYPoint() - subArray[index].getYPoint()) * (subArray[nextPoint].getYPoint() - subArray[index].getYPoint())) < dMinSqr))
                {
                    ClosestPoints testPoints = new ClosestPoints
-                               (S[k].getXPoint(),S[k].getYPoint(), S[i].getXPoint(),S[i].getYPoint());
-                   testPoints.setDistance(dist(S[k],S[i]));
+                               (subArray[nextPoint].getXPoint(),subArray[nextPoint].getYPoint(), subArray[index].getXPoint(),subArray[index].getYPoint());
+                   testPoints.setDistance(dist(subArray[nextPoint],subArray[index]));
                    if(testPoints.compareTo(minPoints) == -1)
                        minPoints = testPoints;       
                    dMinSqr = minPoints.distance;
-                   k = k+1;
+                   nextPoint++;
                }
            }  
            
@@ -290,17 +312,17 @@ public class FindClosestPoints{
        return (dMinSqr);
     }
     
-    public static float bruteClosestPair(TwoDPoints[] P)
+    public static float bruteClosestPair(TwoDPoints[] pointsArray)
     {
-            float min = 100;
-            for(int i = 0; i <P.length - 1; i++)
+            float min = dist(pointsArray[0],pointsArray[1]);
+            for(int indexOne = 0; indexOne <pointsArray.length - 1; indexOne++)
             {
-                for(int j = 0; j < P.length; j++)
+                for(int indexTwo = 0; indexTwo < pointsArray.length; indexTwo++)
                 {
-                    if (dist(P[i], P[j]) < min || minPoints.getDistance() == 0)
+                    if (dist(pointsArray[indexOne], pointsArray[indexTwo]) < min || minPoints.getDistance() == 0)
                     {
-                        min = dist(P[i], P[j]);
-                        minPoints.setPoints(P[i].getXPoint(), P[i].getYPoint(), P[j].getXPoint(), P[j].getYPoint());
+                        min = dist(pointsArray[indexOne], pointsArray[indexTwo]);
+                        minPoints.setPoints(pointsArray[indexOne].getXPoint(), pointsArray[indexOne].getYPoint(), pointsArray[indexTwo].getXPoint(), pointsArray[indexTwo].getYPoint());
                         minPoints.setDistance(min);
                     }
                     

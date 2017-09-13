@@ -50,13 +50,19 @@ public class FindClosestPoints{
             {
                 //create new array for points sorted by y
                 TwoDPoints ySetOfPoints[] = setOfPoints;
+                minPoints.setDistance(dist(xSetOfPoints[0],xSetOfPoints[1]));
+                minPoints.setPoints(xSetOfPoints[0].getXPoint(), xSetOfPoints[0].getYPoint(), xSetOfPoints[1].getXPoint(), xSetOfPoints[1].getYPoint());
                 efficientClosestPair(xSetOfPoints, ySetOfPoints);
                 System.out.println("The closest points are " + 
                                                         minPoints.getPoints());
                 System.out.println("The distance between them is: " 
                                                          + minPoints.distance);
                 System.out.println("quickSort count: " + quickCount);
+                System.out.println("mergeSort Count: " + mergeCount);
+                System.out.println("closest Pair count: " + closestCount);
             }
+            else
+                System.out.println("You need atleast 2 points.");
         }
         else
             System.out.println("Please fix number of points.");
@@ -202,6 +208,7 @@ public class FindClosestPoints{
             //copy the corresponding portion of array
             System.arraycopy(fullArray, 0, halfOne, 0, splitOne);
             System.arraycopy(fullArray, splitOne, halfTwo, 0, SplitTwo);
+            mergeCount = mergeCount + (2 * fullArray.length);
             //call mergesort for each split
             mergeSort(halfOne);
             mergeSort(halfTwo);
@@ -236,11 +243,13 @@ public class FindClosestPoints{
             if(halfOne[counterOne].getYPoint() <= 
                                                halfTwo[counterTwo].getYPoint())
             {
+                mergeCount++;
                 fullArray[arrayIndex] = halfOne[counterOne];
                 counterOne++;
             }
             else
             {
+                mergeCount++;
                 fullArray[arrayIndex] = halfTwo[counterTwo];
                 counterTwo++;
             }
@@ -250,6 +259,7 @@ public class FindClosestPoints{
         //check which array has left over elements
         if(counterOne == halfOne.length)
         {
+            mergeCount++;
             System.arraycopy(halfTwo, counterTwo, fullArray, arrayIndex, 
                                                 (halfTwo.length - counterTwo));
         }
@@ -309,6 +319,7 @@ public class FindClosestPoints{
            //get all points that could have smaller distance from the two halfs
            for(int index = 0; index < ySortedArray.length; index++)
            {
+               closestCount++;
                if((Math.abs(ySortedArray[index].getXPoint() - middle) < minDis))
                {
                    subArray[subArrayCounter] = ySortedArray[index];
@@ -326,6 +337,7 @@ public class FindClosestPoints{
                     (subArray[nextPoint].getYPoint() - 
                                       subArray[index].getYPoint())) < dMinSqr))
                {
+                   closestCount++;
                    ClosestPoints testPoints = new ClosestPoints
                                (subArray[nextPoint].getXPoint(),
                                        subArray[nextPoint].getYPoint(), 
@@ -333,15 +345,16 @@ public class FindClosestPoints{
                                        subArray[index].getYPoint());
                    testPoints.setDistance(dist(subArray[nextPoint],
                                                        subArray[index]));
+                   closestCount++;
                    if(testPoints.compareTo(minPoints) == -1)
                        minPoints = testPoints;       
-                   dMinSqr = minPoints.distance;
+                   dMinSqr = minPoints.distance*minPoints.distance;
                    nextPoint++;
                }
            }  
            
        }
-       return (dMinSqr);
+       return (float)Math.sqrt(dMinSqr);
     }
     
     /****************************************************************/
@@ -359,19 +372,23 @@ public class FindClosestPoints{
             //check all pairs for cloest pair
             for(int indexOne = 0; indexOne <pointsArray.length - 1; indexOne++)
             {
-                for(int indexTwo = 0; indexTwo < pointsArray.length; indexTwo++)
+                for(int indexTwo = indexOne + 1; indexTwo < pointsArray.length; indexTwo++)
                 {
+                    closestCount++;
                     //check if new pair are closer
-                    if (dist(pointsArray[indexOne],pointsArray[indexTwo]) < min
-                                               || minPoints.getDistance() == 0)
+                    if (dist(pointsArray[indexOne],pointsArray[indexTwo]) < min)
                     {
                         //make new min distance if they are
                         min = dist(pointsArray[indexOne], pointsArray[indexTwo]);
-                        minPoints.setPoints(pointsArray[indexOne].getXPoint(), 
-                                             pointsArray[indexOne].getYPoint(), 
-                                            pointsArray[indexTwo].getXPoint(), 
-                                            pointsArray[indexTwo].getYPoint());
-                        minPoints.setDistance(min);
+                        if(min < minPoints.getDistance())
+                        {
+                            minPoints.setPoints(pointsArray[indexOne].getXPoint(), 
+                                    pointsArray[indexOne].getYPoint(), 
+                                   pointsArray[indexTwo].getXPoint(), 
+                                   pointsArray[indexTwo].getYPoint());
+                            minPoints.setDistance(min);
+                        }
+                        
                     }
                     
                 }

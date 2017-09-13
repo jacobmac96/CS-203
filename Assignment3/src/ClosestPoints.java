@@ -88,14 +88,21 @@ public class ClosestPoints implements Comparable<ClosestPoints>{
         return distance;
     }
 
+    /****************************************************************/
+    /*Method: compareTo                                             */
+    /*Purpose: Accessor and mutator for setting distance            */   
+    /*Parameters:                                                   */
+    /*          ClosestPoints distanceTwo: distance to compare to   */
+    /*  Returns:     int: if distance is great or less than current */
+    /****************************************************************/
+    
     @Override
-    public int compareTo(ClosestPoints d2) {
-        if(this.distance < d2.distance)
+    public int compareTo(ClosestPoints distanceTwo) {
+        if(this.distance < distanceTwo.distance)
             return -1;
-        if(this.distance > d2.distance)
+        if(this.distance > distanceTwo.distance)
             return 1;
         return 0;
     }
-
-    
+   
 }

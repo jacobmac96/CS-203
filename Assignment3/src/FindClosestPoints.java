@@ -12,7 +12,9 @@ import java.util.Scanner;
 /*********************************************************************/
 
 public class FindClosestPoints{
-
+    static int quickCount = 0;
+    static int mergeCount = 0;
+    static int closestCount = 0;
     static Scanner pointsScanner = null;
     static int numOfPoints = 0;
     static TwoDPoints setOfPoints[] = null;
@@ -53,6 +55,7 @@ public class FindClosestPoints{
                                                         minPoints.getPoints());
                 System.out.println("The distance between them is: " 
                                                          + minPoints.distance);
+                System.out.println("quickSort count: " + quickCount);
             }
         }
         else
@@ -150,11 +153,13 @@ public class FindClosestPoints{
             do
             { 
                 leftToRight++; 
+                quickCount++;
             }while( (leftToRight < (numOfPoints -1)) && 
                         (setOfPoints[leftToRight].getXPoint() < pivotX) );
             //decrease right point until smaller x is found than pivot
             do
             { 
+                quickCount++;
                 rightToLeft--;
             }while( (rightToLeft > 0) && 
                         (setOfPoints[rightToLeft].getXPoint() > pivotX) );

@@ -1,0 +1,45 @@
+Author: Jacob MacDermaid
+Date:9/13/2017
+
+Program: FindClosestPoints.java
+
+Welcome to Closest Pair Finder.
+
+	This program will take a text file of points and perform a two sorts on these points.
+	The first is a quick sort using hoare partitioning to sort the points by x-coordinate.
+	Then a merge sort is performed to sort by y-coordinates.
+	These two sorts are passed in to the closest pair solver. 
+	The following shows an example file, which is included with this program. 
+	Example File:
+	10 /*number of points*/
+	2 3
+	12 30
+	40 50
+	3 4
+	5 1
+	12 10
+	17 5
+	20 10
+	9 6
+	12 55
+	
+	The program will print the two closest points and their distance from eachother.
+	Example print:
+		The closest points are Point One: (2,3) Point Two: (3,4) 
+		The distance between them is: 1.4142135
+	If the program finds the number of points you specify does not matach the number of points found
+	you will receive the following error message.
+	"Please fix number of points." 
+	You just need to change the number to match and run again.
+
+	
+File Included:
+	FindClosestPoints.java
+	TwoDPoints.java
+	ClosestPoint.java
+
+How to Run:
+	Open FindClosestPointsfolder in jgrasp.
+	Enter the file name in arguments. Example: Points.txt
+	Run FindClosestPoints.java
+	Wait for results to print

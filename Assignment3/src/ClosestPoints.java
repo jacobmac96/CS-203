@@ -1,3 +1,11 @@
+/*********************************************************************/
+/*Jacob MacDermaid                                                   */
+/*Login ID: macd0919                                                 */
+/*CS-203, Summer 2017                                                */
+/*Programming Assignment 3                                           */
+/*ClosestPoints Class: This class stores the x and y coordinates of  */
+/*                        the cloests points and their distance      */
+/*********************************************************************/
 
 public class ClosestPoints implements Comparable<ClosestPoints>{
     int pointOneX;
@@ -5,6 +13,17 @@ public class ClosestPoints implements Comparable<ClosestPoints>{
     int pointTwoX;
     int pointTwoY;
     float distance;
+    
+    /****************************************************************/
+    /*Method: ClosestPoints                                         */
+    /*Purpose: constructor for Closest point                        */   
+    /*Parameters:                                                   */
+    /*          int oneX: x coor. of point one                      */
+    /*          int oneY: y coor. of point one                      */
+    /*          int twoX: x coor. of point two                      */
+    /*          int twoY: t coor. of point two                      */
+    /*  Returns:                                                    */
+    /****************************************************************/
     
     ClosestPoints(int oneX, int oneY, int twoX, int twoY)
     {
@@ -14,10 +33,29 @@ public class ClosestPoints implements Comparable<ClosestPoints>{
         pointTwoY = twoY;
     }
     
+    /****************************************************************/
+    /*Method: ClosestPoints                                         */
+    /*Purpose: constructor for empty Closest point                  */   
+    /*Parameters:                                                   */
+    /*  Returns:                                                    */
+    /****************************************************************/
+    
     ClosestPoints()
     {
         
     }
+    
+    
+    /****************************************************************/
+    /*Method: setPoints/getPoints                                   */
+    /*Purpose: Accessor and mutator for setting points              */   
+    /*Parameters:                                                   */
+    /*          int oneX: x coor. of point one                      */
+    /*          int oneY: y coor. of point one                      */
+    /*          int twoX: x coor. of point two                      */
+    /*          int twoY: t coor. of point two                      */
+    /*  Returns:     String: output of closest points               */
+    /****************************************************************/
     
     public void setPoints(int oneX, int oneY, int twoX, int twoY)
     {
@@ -32,6 +70,14 @@ public class ClosestPoints implements Comparable<ClosestPoints>{
         return ("Point One: (" + pointOneX + "," + pointOneY + ") " +
                 "Point Two: (" + pointTwoX + "," + pointTwoY + ") ");
     }
+    
+    /****************************************************************/
+    /*Method: setDistance/getPoints                                 */
+    /*Purpose: Accessor and mutator for setting distance            */   
+    /*Parameters:                                                   */
+    /*          float distance: distance between two points         */
+    /*  Returns:     float: distance of closest points              */
+    /****************************************************************/
     
     public void setDistance(float distance)
     {

@@ -2,6 +2,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+/*********************************************************************/
+/*Jacob MacDermaid                                                   */
+/*Login ID: macd0919                                                 */
+/*CS-203, Summer 2017                                                */
+/*Programming Assignment 3                                           */
+/*FindClosestPoints Class: This class finds the closest pair of      */
+/*                         points from a text file of points         */
+/*********************************************************************/
+
 public class FindClosestPoints{
 
     static Scanner pointsScanner = null;
@@ -40,23 +49,13 @@ public class FindClosestPoints{
                 //create new array for points sorted by y
                 TwoDPoints ySetOfPoints[] = setOfPoints;
                 efficientClosestPair(xSetOfPoints, ySetOfPoints);
-                printPoints();
-                System.out.println("The closest points are" + minPoints.getPoints());
+                System.out.println("The closest points are " + minPoints.getPoints());
                 System.out.println(minPoints.distance);
             }
         }
             
     }
     
-    //remove-for debugging
-    public static void printPoints() {
-        // TODO Auto-generated method stub
-        for(int i = 0; i < numOfPoints; i++)
-        {
-            System.out.println(setOfPoints[i].getXYPoint());
-        }
-    }
-
 
     /****************************************************************/
     /*Method: getPoints                                             */
@@ -264,25 +263,32 @@ public class FindClosestPoints{
        }
        else
        {
-           
+           //get left and right half sizes
            int halfOne = (int)(xSortedArray.length / 2);
            int halfTwo = xSortedArray.length - halfOne;
+           //create arrays to hold x sorted points
            TwoDPoints xSortLeft[] = new TwoDPoints[halfOne];
            TwoDPoints xSortRight[] = new TwoDPoints[halfTwo];
+           //copy respective portion of array
            System.arraycopy(xSortedArray, 0, xSortLeft, 0, halfOne);
            System.arraycopy(xSortedArray, halfOne, xSortRight, 0, halfTwo);
+           //create arrays to hold y sorted points
            TwoDPoints ySortLeft[] = new TwoDPoints[halfOne];
            TwoDPoints ySortRight[] = new TwoDPoints[halfTwo];
+           //copy respective portion of array
            System.arraycopy(ySortedArray, 0, ySortLeft, 0, halfOne);
            System.arraycopy(ySortedArray, halfOne, ySortRight, 0, halfTwo);
-           
+           //get the closest pair for left and right side
            dLeft = efficientClosestPair(xSortLeft,ySortLeft);
            dRight = efficientClosestPair(xSortRight,ySortRight);
-           
+           //get minimum distance between left and right
            float minDis = Math.min(dLeft, dRight);
+           //find the middle x value
            int middle = xSortedArray[halfOne-1].getXPoint();
+           //create an array that will store values need to be checked
            TwoDPoints subArray[] = new TwoDPoints[numOfPoints];
            int subArrayCounter = 0;
+           //get all points that could have a smaller distance from the two halfs
            for(int index = 0; index < ySortedArray.length; index++)
            {
                if((Math.abs(ySortedArray[index].getXPoint() - middle) < minDis))
@@ -292,14 +298,17 @@ public class FindClosestPoints{
                }
            }
            dMinSqr = minDis * minDis;
+           //check if any of the points are a closer pair
            for(int index = 0; index < subArrayCounter - 1; index++)
            {
                int nextPoint = index + 1;
                while( (nextPoint <= (subArrayCounter-1)) && 
-                       (((subArray[nextPoint].getYPoint() - subArray[index].getYPoint()) * (subArray[nextPoint].getYPoint() - subArray[index].getYPoint())) < dMinSqr))
+                       (((subArray[nextPoint].getYPoint() - subArray[index].getYPoint()) * 
+                               (subArray[nextPoint].getYPoint() - subArray[index].getYPoint())) < dMinSqr))
                {
                    ClosestPoints testPoints = new ClosestPoints
-                               (subArray[nextPoint].getXPoint(),subArray[nextPoint].getYPoint(), subArray[index].getXPoint(),subArray[index].getYPoint());
+                               (subArray[nextPoint].getXPoint(),subArray[nextPoint].getYPoint(), 
+                                       subArray[index].getXPoint(),subArray[index].getYPoint());
                    testPoints.setDistance(dist(subArray[nextPoint],subArray[index]));
                    if(testPoints.compareTo(minPoints) == -1)
                        minPoints = testPoints;       
@@ -312,17 +321,30 @@ public class FindClosestPoints{
        return (dMinSqr);
     }
     
+    /****************************************************************/
+    /*Method: bruteClosestPair                                      */
+    /*Purpose: solves the closest-pair problem using brute force    */  
+    /*Parameters:                                                   */
+    /*          TwoDPoints[] pointsArray: sorted points array       */
+    /*  Returns: float: closest distance                            */
+    /****************************************************************/
+    
     public static float bruteClosestPair(TwoDPoints[] pointsArray)
     {
+        //initialize closest distance to the first 2 pairs
             float min = dist(pointsArray[0],pointsArray[1]);
+            //check all pairs for cloest pair
             for(int indexOne = 0; indexOne <pointsArray.length - 1; indexOne++)
             {
                 for(int indexTwo = 0; indexTwo < pointsArray.length; indexTwo++)
                 {
+                    //check if new pair are closer
                     if (dist(pointsArray[indexOne], pointsArray[indexTwo]) < min || minPoints.getDistance() == 0)
                     {
+                        //make new min distance if they are
                         min = dist(pointsArray[indexOne], pointsArray[indexTwo]);
-                        minPoints.setPoints(pointsArray[indexOne].getXPoint(), pointsArray[indexOne].getYPoint(), pointsArray[indexTwo].getXPoint(), pointsArray[indexTwo].getYPoint());
+                        minPoints.setPoints(pointsArray[indexOne].getXPoint(), pointsArray[indexOne].getYPoint(), 
+                                            pointsArray[indexTwo].getXPoint(), pointsArray[indexTwo].getYPoint());
                         minPoints.setDistance(min);
                     }
                     
@@ -331,18 +353,35 @@ public class FindClosestPoints{
             return min;
     }
     
-    public static float dist(TwoDPoints p1, TwoDPoints p2)
+    /****************************************************************/
+    /*Method: dist                                                  */
+    /*Purpose: takes two points and gives the distance between them */  
+    /*Parameters:                                                   */
+    /*          TwoDPoints pointOne: point one to use               */
+    /*          TwoDPoints pointTwo: point two to use               */
+    /*  Returns: float: distance between two points                 */
+    /****************************************************************/
+    
+    public static float dist(TwoDPoints pointOne, TwoDPoints pointTwo)
     {
-        return (float) Math.sqrt( (p1.getXPoint() - p2.getXPoint())*(p1.getXPoint() - p2.getXPoint()) +
-                     (p1.getYPoint() - p2.getYPoint())*(p1.getYPoint() - p2.getYPoint())
-                   );
+        return (float) Math.sqrt( (pointOne.getXPoint() - pointTwo.getXPoint())*(pointOne.getXPoint() - pointTwo.getXPoint()) +
+                     (pointOne.getYPoint() - pointTwo.getYPoint())*(pointOne.getYPoint() - pointTwo.getYPoint()) );
     }
     
-    public static float distsqrd(TwoDPoints p1, TwoDPoints p2)
+    /****************************************************************/
+    /*Method: distsqrd                                              */
+    /*Purpose: takes two points and gives the squared distance      */   
+    /*                                              between them    */  
+    /*Parameters:                                                   */
+    /*          TwoDPoints pointOne: point one to use               */
+    /*          TwoDPoints pointTwo: point two to use               */
+    /*  Returns: float: squared distance between two points         */
+    /****************************************************************/
+    
+    public static float distsqrd(TwoDPoints pointOne, TwoDPoints pointTwo)
     {
-        return (float)( (p1.getXPoint() - p2.getXPoint())*(p1.getXPoint() - p2.getXPoint()) +
-                (p1.getYPoint() - p2.getYPoint())*(p1.getYPoint() - p2.getYPoint())
-              );
+        return (float)( (pointOne.getXPoint() - pointTwo.getXPoint())*(pointOne.getXPoint() - pointTwo.getXPoint()) +
+                (pointOne.getYPoint() - pointTwo.getYPoint())*(pointOne.getYPoint() - pointTwo.getYPoint()) );
     }
 
 }
